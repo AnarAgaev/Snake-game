@@ -13,6 +13,9 @@ let canvas = document.getElementById('canvas'),
     heightInBlocks = height / blockSize,                                // height of the canvas in blocks
     score          = 0,                                                 // plus one snake will eat an apple
     directions     = { 37: 'left', 38: 'up', 39: 'right', 40: 'down' }, // convert the key codes in directions
+    animationTime = 100,
+    timerId,
+    playGame = true,
 
     /**
      * Draw a frame for canvas
@@ -40,12 +43,13 @@ let canvas = document.getElementById('canvas'),
      * Cancel the setInterval action and print the message End of game 
      */
     gameOver = function () {
-        clearInterval(intervalId);
+        clearTimeout(timerId);
         ctx.font         = '50px Courier';
         ctx.fillStyle    = 'gold';
         ctx.textAlign    = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('Game Over', + width / 2, height / 2);
+        playGame = false;
     },
 
     /**
@@ -103,7 +107,8 @@ class Snake {
         ];
         this.direction = 'right';
         this.nextDirection = 'right';
-        this.bodyColors = ['blue', 'yellow'];
+        this.bodyColors = ['blue', 'yellow'],
+        this.color;
     }
 
     /**
@@ -111,12 +116,12 @@ class Snake {
      */
     draw () {
         for (let i = 0; i < this.segments.length; i++) {
-            this.segments[i].drawSquare(
-                i == 0 
-                ? 'red' 
-                : (i % 2) 
-                    ? this.bodyColors[0] 
-                    : this.bodyColors[1]);            
+            if (i == 0) {
+                this.color = 'red';
+            } else {
+                this.color = (i % 2) ? this.bodyColors[0] : this.bodyColors[1];
+            }
+            this.segments[i].drawSquare(this.color);            
         }
     }
 
@@ -149,6 +154,7 @@ class Snake {
 
         if (newHead.equal(apple.position)) {
             score++;
+            animationTime -= 3;
             apple.move();
         } else {
             this.segments.pop();
@@ -223,14 +229,19 @@ class Apple {
  */
 let snake = new Snake(),
     apple = new Apple(),
-    intervalId = setInterval(() => {
+    gameLoop = function () {
         ctx.clearRect(0, 0, width, height);
         drawScore();
         snake.move();
         snake.draw();
         apple.draw();
         drawBorder();
-    }, 100);
+        if (playGame) {
+            timerId = setTimeout(gameLoop, animationTime);
+        }
+    };
+gameLoop();
+
 
 document.body.addEventListener('keydown', event => {
     let newDirection = directions[event.keyCode];
