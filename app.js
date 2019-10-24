@@ -103,6 +103,7 @@ class Snake {
         ];
         this.direction = 'right';
         this.nextDirection = 'right';
+        this.bodyColors = ['blue', 'yellow'];
     }
 
     /**
@@ -110,7 +111,12 @@ class Snake {
      */
     draw () {
         for (let i = 0; i < this.segments.length; i++) {
-            this.segments[i].drawSquare('red');            
+            this.segments[i].drawSquare(
+                i == 0 
+                ? 'red' 
+                : (i % 2) 
+                    ? this.bodyColors[0] 
+                    : this.bodyColors[1]);            
         }
     }
 
