@@ -9,7 +9,7 @@ Replica of the classic game Snake on Vinyl JavaScript &#127918;
 5. Eat maximum apples and score maximum points.  
 6. Points can be seen in the upper left corner.
 
-Use the keys to control:  
+# Use the keys to control:  
 __Left *&lArr;*__ - change the direction of snake to the left;  
 __Right *&rArr;*__ - change the direction of snake to the right;  
 __Up *&uArr;*__ - change the direction of snake up;  
