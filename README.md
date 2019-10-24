@@ -10,9 +10,9 @@ Replica of the classic game Snake on Vinyl JavaScript &#127918;
 6. Points can be seen in the upper left corner.
 
 Use the keys to control:  
-Left ⇐ - change the direction of snake to the left;
-Right ⇒ - change the direction of snake to the right;
-Up ⇑ - change the direction of snake up;
+Left ⇐ - change the direction of snake to the left;  
+Right ⇒ - change the direction of snake to the right;  
+Up ⇑ - change the direction of snake up;  
 Down ⇓ - change the direction of snake down;  
 
 You can try the implementation on [codepen.io](https://codepen.io/anar_agaev/pen/MWWmadR "You can try snake game on codepen") 
