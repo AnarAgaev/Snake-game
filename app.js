@@ -3,7 +3,7 @@
 let canvas = document.getElementById('canvas'),
     ctx    = canvas.getContext('2d'),
     width  = canvas.width = 500,
-    height = canvas.height = 500,
+    height = canvas.height = 400,
     
     /**
      * Calculate the width and height in cells
@@ -15,7 +15,7 @@ let canvas = document.getElementById('canvas'),
     directions     = { 37: 'left', 38: 'up', 39: 'right', 40: 'down' }, // convert the key codes in directions
     animationTime = 100,
     timerId,
-    playGame = true,
+    playGame = true,                                                    // boolean flag for stop the game
 
     /**
      * Draw a frame for canvas
@@ -91,7 +91,7 @@ class Block {
 
     /**
      * Checking the blocks for the fact that they are in one cell
-     * @param {*} otherBlock 
+     * @param {array} otherBlock 
      */
     equal (otherBlock) {
         return this.col === otherBlock.col && this.row === otherBlock.row;
@@ -154,8 +154,8 @@ class Snake {
 
         if (newHead.equal(apple.position)) {
             score++;
-            animationTime -= 3;
-            apple.move();
+            animationTime -= 5;
+            apple.move(this.segments);
         } else {
             this.segments.pop();
         }
@@ -163,7 +163,7 @@ class Snake {
 
     /**
      * Check if the snake collided with a wall or its own body
-     * @param {*} head 
+     * @param {array} head 
      */
     checkCollision (head) {
         let leftCollision   = (head.col === 0),
@@ -171,9 +171,9 @@ class Snake {
             rightCollision  = (head.col === widthInBlocks - 1),
             bottomCollision = (head.row === heightInBlocks - 1),
             wallCollision   = leftCollision || topCollision || rightCollision || bottomCollision,
-            selfCollision   = false; // храним значение не столкнулась ли змейка с собственным телом
+            selfCollision   = false; // flag for keep the value whether the snake collided with its own body
 
-        // проверка на столкновение с собственным телом
+        // checking body snake collision
         for (let i = 0; i < this.segments.length; i++) {
             if (head.equal(this.segments[i])) {
                 selfCollision = true;
@@ -217,10 +217,19 @@ class Apple {
     /**
      * Move the apple to the next position
      */
-    move () {
+    move(occupiedBlocks) {
         let randomCol = Math.floor(Math.random() * (widthInBlocks - 2)) + 1,
             randomRow = Math.floor(Math.random() * (heightInBlocks - 2)) + 1;
         this.position = new Block(randomCol, randomRow);
+
+        // Check to see if apple has been moved to a block currently occupied by the snake
+        for (let i = 0; i < occupiedBlocks.length; i++) {
+            if (this.position.equal(occupiedBlocks[i])) {
+                this.move(occupiedBlocks); // Call the move method again
+                return;
+            }
+        }
+
     }
 }
 
@@ -240,6 +249,10 @@ let snake = new Snake(),
             timerId = setTimeout(gameLoop, animationTime);
         }
     };
+
+/**
+ * Start the game cicle
+ */
 gameLoop();
 
 
